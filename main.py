@@ -1,5 +1,7 @@
 import numpy as np
 import scipy.stats as ss
+import scipy.signal as ssig
+import functools as ft
 
 
 class Convolution:
@@ -23,6 +25,12 @@ class Convolution:
         _cdf = self.cdf()
         i = np.searchsorted(_cdf, p)
         return self.X[i - 1]
+
+
+def g_convolution(f, x, dx, n):
+    y = f(x)
+    arg = [y * dx] * (n - 1)
+    return ft.reduce(lambda acc, y: ssig.convolve(acc, y, mode="same"), arg, f(x))
 
 
 # %%time
